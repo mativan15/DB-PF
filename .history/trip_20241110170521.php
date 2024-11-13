@@ -1,6 +1,25 @@
 <?php
 session_start();
 
+$host = 'localhost';
+$dbname = 'nombre_de_la_base_de_datos';
+$username = 'usuario';
+$password = 'contraseña';
+
+$conn = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $username, $password);
+$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+$fecha_salida = $_POST['departureDate'];
+$pais_destino = $_POST['destination'];
+
+$stmt = $conn->prepare("CALL BuscarVuelosPorParametros(:fecha_salida, 'Perú', :pais_destino)");
+$stmt->bindParam(':fecha_salida', $fecha_salida);
+$stmt->bindParam(':pais_destino', $pais_destino);
+$stmt->execute();
+
+$flights = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+echo json_encode($flights);
 ?>
 
 <!DOCTYPE html>
@@ -99,10 +118,10 @@ session_start();
 					<label for="destination-country">País de Destino:</label>
 					<select id="destination-country" name="destination-country" >
 						<option value="">Seleccione un país</option>
-						<option value="Perú">Perú</option>
-						<option value="Chile">Chile</option>
-						<option value="Argentina">Argentina</option>
-						<option value="México">México</option>
+						<option value="peru">Perú</option>
+						<option value="chile">Chile</option>
+						<option value="argentina">Argentina</option>
+						<option value="mexico">México</option>
 					</select>
 				</div>
 			
@@ -129,6 +148,8 @@ session_start();
 
 			<button type="button" onclick="searchFlights(), updateTrips()">BuscAAAAAAAAAAR</button>
 			
+
+
 	
 			<script>
 				document.addEventListener('DOMContentLoaded', function() {
@@ -277,7 +298,7 @@ session_start();
 	</script>
 
 
-	<script src="script.js?v=1.0"></script>
+	<script src="script.js"></script>
 	
 </body>
 </html>

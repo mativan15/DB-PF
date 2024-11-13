@@ -499,59 +499,71 @@ function searchFlights() {
     const destination = document.getElementById('destination-country').value;
     const departureDate = document.getElementById('start-date').value;
     const endDate = document.getElementById('end-date').value;
-
-    if (!destination || !departureDate || (Math.ceil((new Date(endDate) - new Date(departureDate)) / (1000 * 60 * 60 * 24))) <= 0) {
+    console.log(" amhfbjkashfs", destination, departureDate); 
+    if (!destination || !departureDate || (Math.ceil((endDate - departureDate) / (1000 * 60 * 60 * 24)))<= 0) {
         alert("Por favor, selecciona el destino y la fecha de salida de forma válida.");
         return;
     }
-
+    //idaa
     const params1 = new URLSearchParams();
     params1.append('destination', destination);
     params1.append('departureDate', departureDate);
-
+    availableFlights1 = null;
+    fetch('s_vuelos.php', {
+        method: 'POST',
+        body: params1,
+    })
+    .then(response1 => {
+        if (!response1.ok) {
+            throw new Error(`HTTP error! status: ${response1.status}`);
+        }
+        return response1.json();
+    })
+    .then(data1 => {
+        //alert("JDHGKSJDF", data);
+        console.log('Respuesta recibida:', data1)
+        availableFlights1 = data1;
+    })
+    .catch(error => console.error('Errorrrr:', error));
+    //vueltaa
     const params2 = new URLSearchParams();
     params2.append('destination', destination);
-    params2.append('departureDate', endDate);
-
-    Promise.all([
-        fetch('s_vuelos.php', { method: 'POST', body: params1 })
-            .then(response1 => {
-                if (!response1.ok) {
-                    throw new Error(`HTTP error! status: ${response1.status}`);
-                }
-                return response1.json();
-            }),
-        fetch('s_vuelos.php', { method: 'POST', body: params2 })
-            .then(response2 => {
-                if (!response2.ok) {
-                    throw new Error(`HTTP error! status: ${response2.status}`);
-                }
-                return response2.json();
-            })
-    ])
-    .then(([data1, data2]) => {
-        console.log('Respuesta de ida:', data1);
-        console.log('Respuesta de vuelta:', data2);
-        displayResults(data1, data2); 
+    params2.append('departureDate', departureDate);
+    availableFlights2 = null;
+    fetch('s_vuelos.php', {
+        method: 'POST',
+        body: params2,
     })
-    .catch(error => console.error('Error en fetch:', error));
+    .then(response2 => {
+        if (!response2.ok) {
+            throw new Error(`HTTP error! status: ${response2.status}`);
+        }
+        return response2.json();
+    })
+    .then(data2 => {
+        //alert("JDHGKSJDF", data);
+        console.log('Respuesta recibida:', data2)
+        availableFlights2 = data2;
+    })
+    .catch(error => console.error('Errorrrr:', error));
+    displayResults(availableFlights1, availableFlights2);
 }
 
 function displayResults(flights1, flights2) {
     const resultsContainer = document.getElementById('vuelo-selection');
     resultsContainer.innerHTML = "";  
 
-    const questionParagraph1 = document.createElement('p');
-    questionParagraph1.className = 'parrafo';
-    questionParagraph1.textContent =  "Selecciona tu vuelo de Ida"; 
-    resultsContainer.appendChild(questionParagraph1);
-    console.log('Respuesta111:', flights1)
+    const questionParagraph = document.createElement('p');
+    questionParagraph.className = 'parrafo';
+    questionParagraph.textContent =  "Selecciona tu vuelo"; 
+    resultsContainer.appendChild(questionParagraph);
+
     //vuelos idaaa
     if (!flights1 || flights1.length === 0) {
         resultsContainer.innerHTML = "<p>No se encontraron vuelos de ida para la fecha seleccionada.</p>";
         return;
     }
-    console.log("Vuelos ida encontrados:", flights1);
+    console.log("Vuelos encontrados:", flights1);
 
     flights1.forEach((flight1, index) => {
         console.log(`Mostrando vuelo ${index + 1}:`, flight1);  
@@ -575,16 +587,11 @@ function displayResults(flights1, flights2) {
         resultsContainer.appendChild(flightDetails1);
     });
     //vuelos vueltaa
-    const questionParagraph2 = document.createElement('p');
-    questionParagraph2.className = 'parrafo';
-    questionParagraph2.textContent =  "Selecciona tu vuelo de Vuelta"; 
-    resultsContainer.appendChild(questionParagraph2);
-
     if (!flights2 || flights2.length === 0) {
         resultsContainer.innerHTML = "<p>No se encontraron vuelos de vuelta para la fecha seleccionada.</p>";
         return;
     }
-    console.log("Vuelos vuelta encontrados:", flights2);
+    console.log("Vuelos encontrados:", flights2);
 
     flights2.forEach((flight2, index) => {
         console.log(`Mostrando vuelo ${index + 1}:`, flight2);  
@@ -594,7 +601,7 @@ function displayResults(flights1, flights2) {
 
         flightDetails2.innerHTML = `
             <div class="flight-segment">
-                <h3>VUELTA</h3>
+                <h3>IDA</h3>
                 <p class="route">AQP <span class="arrow">→</span> ${flight2.Ciudad_Destino}</p>
                 <p class="airline">${flight2.Num_Vuelo}</p>
                 <p class="time">${flight2.Fecha_Salida} <span class="layover">${flight2.Pais_Destino}</span></p>

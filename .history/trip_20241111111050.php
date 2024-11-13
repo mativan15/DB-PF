@@ -127,7 +127,7 @@ session_start();
 				
 			</div>
 
-			<button type="button" onclick="searchFlights(), updateTrips()">BuscAAAAAAAAAAR</button>
+			<button type="button" onclick="updateTrips()">BuscAAAAAAAAAAR</button>
 			
 	
 			<script>

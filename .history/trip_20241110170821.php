@@ -99,10 +99,10 @@ session_start();
 					<label for="destination-country">País de Destino:</label>
 					<select id="destination-country" name="destination-country" >
 						<option value="">Seleccione un país</option>
-						<option value="Perú">Perú</option>
-						<option value="Chile">Chile</option>
-						<option value="Argentina">Argentina</option>
-						<option value="México">México</option>
+						<option value="peru">Perú</option>
+						<option value="chile">Chile</option>
+						<option value="argentina">Argentina</option>
+						<option value="mexico">México</option>
 					</select>
 				</div>
 			
@@ -129,6 +129,8 @@ session_start();
 
 			<button type="button" onclick="searchFlights(), updateTrips()">BuscAAAAAAAAAAR</button>
 			
+
+
 	
 			<script>
 				document.addEventListener('DOMContentLoaded', function() {
@@ -277,7 +279,7 @@ session_start();
 	</script>
 
 
-	<script src="script.js?v=1.0"></script>
+	<script src="script.js"></script>
 	
 </body>
 </html>

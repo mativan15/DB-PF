@@ -1,0 +1,26 @@
+if (!flights2 || flights2.length === 0) {
+        resultsContainer.innerHTML = "<p>No se encontraron vuelos de ida para la fecha seleccionada.</p>";
+        return;
+    }
+    console.log("Vuelos encontrados:", flights2);
+
+    flights2.forEach((flight2, index) => {
+        console.log(`Mostrando vuelo ${index + 1}:`, flight2);  
+
+        const flightDetails2 = document.createElement('div');
+        flightDetails2.className = 'flight-details';
+
+        flightDetails2.innerHTML = `
+            <div class="flight-segment">
+                <h3>IDA</h3>
+                <p class="route">AQP <span class="arrow">→</span> ${flight2.Ciudad_Destino}</p>
+                <p class="airline">${flight2.Num_Vuelo}</p>
+                <p class="time">${flight2.Fecha_Salida} <span class="layover">${flight2.Pais_Destino}</span></p>
+                <p class="duration">${flight2.Precio}</p>
+            </div>
+            <div>
+                <p class="route">$${flight2.Precio}</p>
+            </div>
+        `;
+
+        resultsContainer.appendChild(flightDetails2);

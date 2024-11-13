@@ -1,5 +1,5 @@
 const trips = {
-    Perú: [
+    peru: [
         {
             destination: "Colca_Full_Day",
             image: "img/colca2.jpg",
@@ -43,7 +43,7 @@ const trips = {
             price: 60
         }
     ],
-    Chile: [
+    chile: [
         {
             destination: "Torres_del_Paine",
             image: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Torres_del_Paine_4.jpg/800px-Torres_del_Paine_4.jpg",
@@ -87,7 +87,7 @@ const trips = {
             price: 150
         }
     ],
-    Argentina: [
+    argentina: [
         {
             destination: "Iguazu_Falls",
             image: "https://www.journeylatinamerica.com/app/uploads/destinations/argentina/igauzu/arg_iguazuview_shutterstock_1077922052-0x1100-c-center.webp",
@@ -131,7 +131,7 @@ const trips = {
             price: 400
         }
     ],
-    México: [
+    mexico: [
         {
             destination: "Cancun_Beach",
             image: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Cancun_Beach.jpg/800px-Cancun_Beach.jpg",
@@ -267,12 +267,52 @@ const guias = {
 };
 
 
+const flights = [
+    {
+        destination: "chile",
+        airline: "LATAM",
+        departure: "09:40",
+        arrival: "18:35",
+        duration: "8 h 55 m",
+        layovers: "1 escala",
+        baggage: "Equipaje",
+        departureDate: "2024-12-16",
+        returnDate: "2024-12-21",
+        price: 250
+    },
+    {
+        destination: "argentina",
+        airline: "American Airlines",
+        departure: "08:30",
+        arrival: "15:20",
+        duration: "7 h 50 m",
+        layovers: "Directo",
+        baggage: "Equipaje",
+        departureDate: "2024-12-16",
+        returnDate: "2024-12-21",
+        price: 300
+    },
+    {
+        destination: "peru",
+        airline: "LATAM",
+        departure_ida: "09:40",
+        arrival_ida: "18:35",
+        departure_vuelta: "20:40",
+        arrival_vuelta: "06:35",
+        duration: "8 h 55 m",
+        layovers: "1 escala",
+        baggage: "Equipaje",
+        departureDate: "2024-12-16",
+        returnDate: "2024-12-21",
+        price: 150
+    },
+    // Agrega más vuelos según sea necesario
+];
 let selectedTrip = null;
 
 function updateTrips() {
     const countrySelect = document.getElementById('destination-country');
     const selectedCountry = countrySelect.value;
-    console.log(selectedCountry);
     const tripsContainer = document.getElementById('trips-container');
     const hotelSelection = document.getElementById('hotel-selection');
     const guiaSelection = document.getElementById('hotel-selection');
@@ -496,118 +536,82 @@ function updateGuia(){
 
 
 function searchFlights() {
+    alert("Se entro a la funcion search...");
     const destination = document.getElementById('destination-country').value;
     const departureDate = document.getElementById('start-date').value;
-    const endDate = document.getElementById('end-date').value;
-
-    if (!destination || !departureDate || (Math.ceil((new Date(endDate) - new Date(departureDate)) / (1000 * 60 * 60 * 24))) <= 0) {
-        alert("Por favor, selecciona el destino y la fecha de salida de forma válida.");
+    console.log(" amhfbjkashfs", destination, departureDate); 
+    if (!destination || !departureDate) {
+        alert("Por favor, selecciona el destino y la fecha de salida.");
         return;
     }
 
-    const params1 = new URLSearchParams();
-    params1.append('destination', destination);
-    params1.append('departureDate', departureDate);
+    const params = new URLSearchParams();
+    params.append('destination', destination);
+    params.append('departureDate', departureDate);
 
-    const params2 = new URLSearchParams();
-    params2.append('destination', destination);
-    params2.append('departureDate', endDate);
-
-    Promise.all([
-        fetch('s_vuelos.php', { method: 'POST', body: params1 })
-            .then(response1 => {
-                if (!response1.ok) {
-                    throw new Error(`HTTP error! status: ${response1.status}`);
-                }
-                return response1.json();
-            }),
-        fetch('s_vuelos.php', { method: 'POST', body: params2 })
-            .then(response2 => {
-                if (!response2.ok) {
-                    throw new Error(`HTTP error! status: ${response2.status}`);
-                }
-                return response2.json();
-            })
-    ])
-    .then(([data1, data2]) => {
-        console.log('Respuesta de ida:', data1);
-        console.log('Respuesta de vuelta:', data2);
-        displayResults(data1, data2); 
+    fetch('s_vuelos.php', {
+        method: 'POST',
+        body: params,
     })
-    .catch(error => console.error('Error en fetch:', error));
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log('Respuesta recibida:', data)
+        const availableFlights = data;
+        displayResults(availableFlights);
+    })
+    .catch(error => console.error('Error:', error));
 }
 
-function displayResults(flights1, flights2) {
+function displayResults(flights) {
     const resultsContainer = document.getElementById('vuelo-selection');
-    resultsContainer.innerHTML = "";  
+    resultsContainer.innerHTML = "";  // Limpiar resultados previos
 
-    const questionParagraph1 = document.createElement('p');
-    questionParagraph1.className = 'parrafo';
-    questionParagraph1.textContent =  "Selecciona tu vuelo de Ida"; 
-    resultsContainer.appendChild(questionParagraph1);
-    console.log('Respuesta111:', flights1)
-    //vuelos idaaa
-    if (!flights1 || flights1.length === 0) {
-        resultsContainer.innerHTML = "<p>No se encontraron vuelos de ida para la fecha seleccionada.</p>";
+    const questionParagraph = document.createElement('p');
+    questionParagraph.className = 'parrafo';
+    questionParagraph.textContent = '¿Escoge tu vuelo?';
+    resultsContainer.appendChild(questionParagraph);
+
+    if (!flights || flights.length === 0) {
+        resultsContainer.innerHTML = "<p>No se encontraron vuelos para los criterios seleccionados.</p>";
         return;
     }
-    console.log("Vuelos ida encontrados:", flights1);
 
-    flights1.forEach((flight1, index) => {
-        console.log(`Mostrando vuelo ${index + 1}:`, flight1);  
+    flights.forEach(flight => {
+        const flightDetails = document.createElement('div');
+        flightDetails.className = 'flight-details';
 
-        const flightDetails1 = document.createElement('div');
-        flightDetails1.className = 'flight-details';
-
-        flightDetails1.innerHTML = `
+        flightDetails.innerHTML = `
             <div class="flight-segment">
                 <h3>IDA</h3>
-                <p class="route">AQP <span class="arrow">→</span> ${flight1.Ciudad_Destino}</p>
-                <p class="airline">${flight1.Num_Vuelo}</p>
-                <p class="time">${flight1.Fecha_Salida} <span class="layover">${flight1.Pais_Destino}</span></p>
-                <p class="duration">${flight1.Precio}</p>
+                <p class="date">${flight.departureDate}</p>
+                <p class="route">AQP <span class="arrow">→</span> ${flight.destination.toUpperCase()}</p>
+                <p class="airline">${flight.airline}</p>
+                <p class="time">${flight.departure_ida} <span class="layover">${flight.layovers}</span> ${flight.arrival_ida}</p>
+                <p class="duration">${flight.duration}</p>
+                <p class="baggage">${flight.baggage}</p>
             </div>
-            <div>
-                <p class="route">$${flight1.Precio}</p>
-            </div>
-        `;
 
-        resultsContainer.appendChild(flightDetails1);
-    });
-    //vuelos vueltaa
-    const questionParagraph2 = document.createElement('p');
-    questionParagraph2.className = 'parrafo';
-    questionParagraph2.textContent =  "Selecciona tu vuelo de Vuelta"; 
-    resultsContainer.appendChild(questionParagraph2);
-
-    if (!flights2 || flights2.length === 0) {
-        resultsContainer.innerHTML = "<p>No se encontraron vuelos de vuelta para la fecha seleccionada.</p>";
-        return;
-    }
-    console.log("Vuelos vuelta encontrados:", flights2);
-
-    flights2.forEach((flight2, index) => {
-        console.log(`Mostrando vuelo ${index + 1}:`, flight2);  
-
-        const flightDetails2 = document.createElement('div');
-        flightDetails2.className = 'flight-details';
-
-        flightDetails2.innerHTML = `
             <div class="flight-segment">
                 <h3>VUELTA</h3>
-                <p class="route">AQP <span class="arrow">→</span> ${flight2.Ciudad_Destino}</p>
-                <p class="airline">${flight2.Num_Vuelo}</p>
-                <p class="time">${flight2.Fecha_Salida} <span class="layover">${flight2.Pais_Destino}</span></p>
-                <p class="duration">${flight2.Precio}</p>
+                <p class="date">${flight.returnDate}</p>
+                <p class="route">${flight.destination.toUpperCase()} <span class="arrow">→</span> AQP</p>
+                <p class="airline">${flight.airline}</p>
+                <p class="time">${flight.departure_vuelta} <span class="layover">${flight.layovers}</span> ${flight.arrival_vuelta}</p>
+                <p class="duration">${flight.duration}</p>
+                <p class="baggage">${flight.baggage}</p>
             </div>
-            <div>
-                <p class="route">$${flight2.Precio}</p>
+            <div >
+                <p class="route">$${flight.price}</p>
             </div>
         `;
 
-        resultsContainer.appendChild(flightDetails2);
+        resultsContainer.appendChild(flightDetails);
     });
-    console.log("Todos los vuelos han sido mostrados en el contenedor.");
 }
 document.getElementById('previous-step').addEventListener('click', () => {
     selectedTrip = null; 
@@ -618,6 +622,7 @@ document.getElementById('previous-step').addEventListener('click', () => {
 });
 
 //document.getElementById('destination-country').addEventListener('change', updateTrips);
+
 
 
 
@@ -698,13 +703,11 @@ function confirmar(){
 
 
 function incrementPeople() {
-    alert("Se entro a la funcion increeee...");
     const numPeopleInput = document.getElementById('num-people');
     numPeopleInput.value = parseInt(numPeopleInput.value) + 1;
 }
 
 function decrementPeople() {
-    alert("Se entro a la funcion decree...");
     const numPeopleInput = document.getElementById('num-people');
     if (numPeopleInput.value > 1) {
         numPeopleInput.value = parseInt(numPeopleInput.value) - 1;

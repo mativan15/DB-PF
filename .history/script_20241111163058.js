@@ -541,10 +541,10 @@ function displayResults(flights1, flights2) {
     const resultsContainer = document.getElementById('vuelo-selection');
     resultsContainer.innerHTML = "";  
 
-    const questionParagraph1 = document.createElement('p');
-    questionParagraph1.className = 'parrafo';
-    questionParagraph1.textContent =  "Selecciona tu vuelo de Ida"; 
-    resultsContainer.appendChild(questionParagraph1);
+    const questionParagraph = document.createElement('p');
+    questionParagraph.className = 'parrafo';
+    questionParagraph.textContent =  "Selecciona tu vuelo de Ida"; 
+    resultsContainer.appendChild(questionParagraph);
     console.log('Respuesta111:', flights1)
     //vuelos idaaa
     if (!flights1 || flights1.length === 0) {
@@ -575,10 +575,7 @@ function displayResults(flights1, flights2) {
         resultsContainer.appendChild(flightDetails1);
     });
     //vuelos vueltaa
-    const questionParagraph2 = document.createElement('p');
-    questionParagraph2.className = 'parrafo';
-    questionParagraph2.textContent =  "Selecciona tu vuelo de Vuelta"; 
-    resultsContainer.appendChild(questionParagraph2);
+    questionParagraph.textContent =  "Selecciona tu vuelo de Vuelta"; 
 
     if (!flights2 || flights2.length === 0) {
         resultsContainer.innerHTML = "<p>No se encontraron vuelos de vuelta para la fecha seleccionada.</p>";

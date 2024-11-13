@@ -541,17 +541,17 @@ function displayResults(flights1, flights2) {
     const resultsContainer = document.getElementById('vuelo-selection');
     resultsContainer.innerHTML = "";  
 
-    const questionParagraph1 = document.createElement('p');
-    questionParagraph1.className = 'parrafo';
-    questionParagraph1.textContent =  "Selecciona tu vuelo de Ida"; 
-    resultsContainer.appendChild(questionParagraph1);
+    const questionParagraph = document.createElement('p');
+    questionParagraph.className = 'parrafo';
+    questionParagraph.textContent =  "Selecciona tu vuelo"; 
+    resultsContainer.appendChild(questionParagraph);
     console.log('Respuesta111:', flights1)
     //vuelos idaaa
     if (!flights1 || flights1.length === 0) {
         resultsContainer.innerHTML = "<p>No se encontraron vuelos de ida para la fecha seleccionada.</p>";
         return;
     }
-    console.log("Vuelos ida encontrados:", flights1);
+    console.log("Vuelos encontrados:", flights1);
 
     flights1.forEach((flight1, index) => {
         console.log(`Mostrando vuelo ${index + 1}:`, flight1);  
@@ -575,16 +575,11 @@ function displayResults(flights1, flights2) {
         resultsContainer.appendChild(flightDetails1);
     });
     //vuelos vueltaa
-    const questionParagraph2 = document.createElement('p');
-    questionParagraph2.className = 'parrafo';
-    questionParagraph2.textContent =  "Selecciona tu vuelo de Vuelta"; 
-    resultsContainer.appendChild(questionParagraph2);
-
     if (!flights2 || flights2.length === 0) {
         resultsContainer.innerHTML = "<p>No se encontraron vuelos de vuelta para la fecha seleccionada.</p>";
         return;
     }
-    console.log("Vuelos vuelta encontrados:", flights2);
+    console.log("Vuelos encontrados:", flights2);
 
     flights2.forEach((flight2, index) => {
         console.log(`Mostrando vuelo ${index + 1}:`, flight2);  
@@ -594,7 +589,7 @@ function displayResults(flights1, flights2) {
 
         flightDetails2.innerHTML = `
             <div class="flight-segment">
-                <h3>VUELTA</h3>
+                <h3>IDA</h3>
                 <p class="route">AQP <span class="arrow">→</span> ${flight2.Ciudad_Destino}</p>
                 <p class="airline">${flight2.Num_Vuelo}</p>
                 <p class="time">${flight2.Fecha_Salida} <span class="layover">${flight2.Pais_Destino}</span></p>
