@@ -127,7 +127,9 @@ session_start();
 				
 			</div>
 
-			<button type="button" onclick="searchFlights(), updateTrips()">BuscAAAAAAAAAAR</button>
+			<div class="container confirm-trip">
+				<button type="button" class = "buscar-button" onclick="searchFlights(), updateTrips()">Buscar</button>
+			</div>	
 			
 	
 			<script>
@@ -176,14 +178,10 @@ session_start();
 			
 			
 
-			<div class="navigation-buttons" style="display: none;">
-				<button id="back-button" onclick="goBack()">Back</button>
-				<button id="nex-step" onclick="nextStep()">Next</button>
-			</div>
-
 			<div class="container confirm-trip">
-				<button id="confirm-button" class="confirm-button" onclick="confirmar()">Confirma tu viaje</button>
-			</div>	
+				<button id="confirm-button" class="confirm-button" onclick="confirmar()" style="display: none;">Confirma tu viaje</button>
+			</div>
+	
 
 		</section>
 

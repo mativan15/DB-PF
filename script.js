@@ -273,25 +273,25 @@ function updateTrips() {
     const countrySelect = document.getElementById('destination-country');
     const selectedCountry = countrySelect.value;
     console.log(selectedCountry);
+
     const tripsContainer = document.getElementById('trips-container');
     const hotelSelection = document.getElementById('hotel-selection');
-    const guiaSelection = document.getElementById('hotel-selection');
+    const guiaSelection = document.getElementById('guia-selection');
     const transportSelection = document.getElementById('transport-selection');
-    const navigationButtons = document.querySelector('.navigation-buttons');
+    const confirmButton = document.getElementById('confirm-button');
 
     tripsContainer.innerHTML = '';
     hotelSelection.innerHTML = ''; // Limpiar la selección de hoteles
     transportSelection.innerHTML = ''; 
     guiaSelection.innerHTML = ''; 
-
-    navigationButtons.style.display = 'none'; // Ocultar botones de navegación al inicio
-
+    confirmButton.style.display = 'none'; // Ocultar el botón de confirmación al inicio
 
     if (trips[selectedCountry]) {
         trips[selectedCountry].forEach(trip => {
             const tripCard = document.createElement('div');
             tripCard.className = 'card-trips';
 
+            // Asignar atributos para el viaje seleccionado
             tripCard.setAttribute('data-destination', trip.destination);
             tripCard.setAttribute('data-price', trip.price);
             tripCard.setAttribute('data-duration', trip.duration);
@@ -321,16 +321,21 @@ function updateTrips() {
                 </div>
             `;
 
+            // Agregar evento para cuando se selecciona un viaje
             tripCard.addEventListener('click', () => {
                 const allTripCards = document.querySelectorAll('.card-trips');
                 allTripCards.forEach(card => card.classList.remove('selected'));
                 tripCard.classList.add('selected');
 
-                selectedTrip = trip; 
-                hotelSelection.innerHTML = ''; 
-                transportSelection.innerHTML = ''; 
-                guiaSelection.innerHTML = ''; 
-                navigationButtons.style.display = 'block'; // Mostrar botones de navegación
+                selectedTrip = trip;
+
+                // Mostrar y actualizar las secciones de hoteles, transporte y guía
+                updateHotels();
+                updateTransport();
+                updateGuia();
+
+                // Mostrar el botón de confirmación
+                confirmButton.style.display = 'block';
             });
 
             tripsContainer.appendChild(tripCard);
@@ -609,6 +614,8 @@ function displayResults(flights1, flights2) {
     });
     console.log("Todos los vuelos han sido mostrados en el contenedor.");
 }
+
+
 document.getElementById('previous-step').addEventListener('click', () => {
     selectedTrip = null; 
     const hotelSelection = document.getElementById('hotel-selection');
@@ -617,33 +624,8 @@ document.getElementById('previous-step').addEventListener('click', () => {
     navigationButtons.style.display = 'none'; 
 });
 
-//document.getElementById('destination-country').addEventListener('change', updateTrips);
-
-
-
-function nextStep() {
-    //updateTrips();
-
-    updateHotels();
-    updateTransport();
-    updateGuia();    
-    //tripsContainer.style.display = 'none';
-
-}
-function goBack() {
-    const tripsContainer = document.getElementById('trips-container');
-    const hotelSelection = document.getElementById('hotel-selection');
-    const navigationButtons = document.querySelector('.navigation-buttons');
-
-    // Mostrar de nuevo las tarjetas de viaje
-    tripsContainer.style.display = 'trips-container';
-    hotelSelection.style.display = 'none';
-    navigationButtons.style.display = 'none'; // Ocultar botones de navegación
-}
-
 
 function confirmar(){
-    alert("Se entro a la funcion confirmar...");
 
     const destination = document.getElementById('destination-country').value;
     const departureDate = document.getElementById('start-date').value;

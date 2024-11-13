@@ -1166,7 +1166,7 @@ html {
 .container.confirm-trip {
     display: flex;
     justify-content: center;
-    margin-top: 10rem; 
+    margin-top: 6rem; 
 }
 
 .confirm-button {
@@ -1182,6 +1182,19 @@ html {
 
 .confirm-button:hover {
     background-color: var(--title-color); 
+}
+
+/*¨******* BUTTONS ***********/
+
+.buscar-button {
+    background-color: #007bff; 
+    border: none;
+    border-radius: 20px;
+    padding: 1rem 4rem;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
 
